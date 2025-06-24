@@ -19,10 +19,35 @@ router.get(
 );
 
 //GET UPCOMING
+router.get(
+  "/sessions/upcoming",
+  async (req: Request, res: Response, next: NextFunction) => {
+    const days = parseInt(req.query.days as string, 10) || 30;
+    const now = new Date();
+    const future = new Date();
+    future.setDate(now.getDate() + days);
+
+    try {
+      const upcomingSessions = await prisma.session.findMany({
+        where: {
+          date: {
+            gte: now,
+            lte: future,
+          },
+        },
+        include: { workout: true },
+        orderBy: { date: "asc" },
+      });
+      res.json(upcomingSessions);
+    } catch (error) {
+      next(error);
+    }
+  }
+);
 
 //GET BY ID
 router.get(
-  "/sessions/sessionId",
+  "/sessions/:sessionId",
   async (req: Request, res: Response, next: NextFunction) => {
     const { sessionId } = req.params;
     try {
