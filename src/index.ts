@@ -8,6 +8,7 @@ const PORT = process.env.PORT || 4000;
 dotenv.config();
 //INIT APP
 const app: Application = express();
+const isDev = process.env.NODE_ENV === "development";
 
 //MIDDLEWARE
 middlewareConfig(app);
@@ -22,12 +23,19 @@ app.use("/api", sessionRoutes);
 //STATIC FILES
 
 // Serve static files from Vue build
-app.use(express.static(path.join(__dirname, "..", "public")));
-
+console.log(process.env.NODE_ENV);
+if (isDev) {
+  app.use(express.static(path.join(__dirname, "..", "public")));
+  app.get(/(.*)/, (_, res) => {
+    res.sendFile(path.join(__dirname, "..", "public", "index.html"));
+  });
+} else {
+  app.use(express.static(path.join(__dirname, "..", "..", "public")));
+  app.get(/(.*)/, (_, res) => {
+    res.sendFile(path.join(__dirname, "..", "..", "public", "index.html"));
+  });
+}
 // Catch-all route to serve index.html (for Vue Router)
-app.get(/(.*)/, (_, res) => {
-  res.sendFile(path.join(__dirname, "..", "public", "index.html"));
-});
 
 //ERROR HANDLING
 app.use(notFoundHandler);

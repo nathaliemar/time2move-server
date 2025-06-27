@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon --exec ts-node src/index.ts --project ./tsconfig.json",
+    "dev": "export NODE_ENV=development && nodemon --exec ts-node src/index.ts --project ./tsconfig.json",
     "build": "tsc",
     "start": "node dist/src/index.js"
   },
@@ -14,7 +14,7 @@
   "dependencies": {
     "@prisma/client": "^6.10.1",
     "cors": "^2.8.5",
-    "dotenv": "^16.5.0",
+    "dotenv": "^16.6.0",
     "express": "^5.1.0",
     "morgan": "^1.10.0",
     "nodemon": "^3.1.10",
